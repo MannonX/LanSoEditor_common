@@ -623,11 +623,10 @@ public class VideoEditor {
     }
 
     /**
-     * 建议用  LanSongMergeAV
-     * @param videoFile
-     * @param audioFile
+     * 已废弃,请用AudioEditor
      * @return
      */
+    @Deprecated
     public String executeVideoMergeAudio(String videoFile, String audioFile) {
         boolean isAAC = false;
 
@@ -674,9 +673,15 @@ public class VideoEditor {
             return null;
         }
     }
+
     /**
-     * 建议用  LanSongMergeAV
+     * 废弃, 请用AudioEditor
+     * @param videoFile
+     * @param audioFile
+     * @param audiostartS
+     * @return
      */
+    @Deprecated
     public String executeVideoMergeAudio(String videoFile, String audioFile,float audiostartS) {
         boolean isAAC = false;
         if (fileExist(videoFile) && fileExist(audioFile)) {
@@ -684,6 +689,8 @@ public class VideoEditor {
             String dstFile=LanSongFileUtil.createMp4FileInBox();
             if (audioFile.endsWith(".aac")) {
                 isAAC = true;
+            }else{
+                Log.w(TAG,"您的音频不是aac编码, 可能会导致合成后视频无法播放.");
             }
             List<String> cmdList = new ArrayList<String>();
             cmdList.add("-i");

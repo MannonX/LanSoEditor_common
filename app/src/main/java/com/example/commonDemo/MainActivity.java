@@ -40,7 +40,7 @@ import java.util.Calendar;
 public class MainActivity extends Activity {
 
     private DemoInfo[] mTestCmdArray = {
-
+            new DemoInfo(R.string.demo_id_mediainfo, R.string.demo_id_mediainfo, false, false),
             new DemoInfo(R.string.demo_id_avmerge, R.string.demo_more_avmerge, true, false),
             new DemoInfo(R.string.demo_id_cutaudio, R.string.demo_more_cutaudio, false, true),
             new DemoInfo(R.string.demo_id_cutvideo, R.string.demo_more_cutvideo, true, false),
@@ -185,7 +185,12 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (position == mTestCmdArray.length - 1) {  //直接视频播放
+                if(position==0){  //获取信息;
+                    Intent intent = new Intent(MainActivity.this, MediaInfoActivity.class);
+                    intent.putExtra("videopath", tvVideoPath.getText().toString());
+                    startActivity(intent);
+                }
+                else if (position == mTestCmdArray.length - 1) {  //直接视频播放
                     startVideoPlayer();
                 } else if (position == mTestCmdArray.length - 2) {  //自定义
                     Intent intent = new Intent(MainActivity.this, CustomFunctionActivity.class);

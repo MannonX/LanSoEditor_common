@@ -143,6 +143,10 @@ public class LanSongFileUtil {
         return createFile(TMP_DIR, ".mp3");
     }
 
+    public static String createWAVFileInBox() {
+        return createFile(TMP_DIR, ".wav");
+    }
+
     /**
      * 在box目录下生成一个指定后缀名的文件,并返回名字的路径.这里仅仅创建一个名字.
      *
