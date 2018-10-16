@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
+import com.example.advanceSuggest.ListAdvanceDemoActivity;
 import com.lansoeditor.demo.R;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -35,7 +36,6 @@ import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
-import java.util.Calendar;
 
 public class MainActivity extends Activity {
 
@@ -160,6 +160,14 @@ public class MainActivity extends Activity {
     }
 
     private void initView() {
+        findViewById(R.id.id_main_advance_demo).setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ListAdvanceDemoActivity.class);
+                startActivity(intent);
+            }
+        });
         tvVideoPath = (TextView) findViewById(R.id.id_main_tvvideo);
 
         findViewById(R.id.id_main_select_video).setOnClickListener(new OnClickListener() {

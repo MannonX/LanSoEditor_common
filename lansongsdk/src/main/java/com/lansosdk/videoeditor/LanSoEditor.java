@@ -18,15 +18,10 @@ public class LanSoEditor {
 
     private static boolean isLoaded = false;
 
-    public static void initSDK(Context context) {
-        loadLibraries();
-        LanSoEditor.initSo(context,null);
-        VideoEditor.logEnable(context);  //使能;
-    }
-
     public static void initSDK(Context context, String str) {
         loadLibraries();
         LanSoEditor.initSo(context, str);
+        VideoEditor.logEnable(context);  //使能;
     }
 
 

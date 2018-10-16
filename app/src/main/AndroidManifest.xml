@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ls_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
@@ -37,6 +37,15 @@
         <activity android:name="com.example.commonDemo.FileExplorerActivity"></activity>
         <activity android:name="com.example.commonDemo.MediaInfoActivity"></activity>
         <activity android:name="com.example.commonDemo.AVEditorDemoActivity"/>
+
+        <!--专业版演示-->
+        <activity android:name="com.example.advanceSuggest.ListAdvanceDemoActivity">
+        </activity>
+        <activity android:name="com.example.advanceSuggest.AERecordFileHintActivity"/>
+        <activity android:name="com.example.advanceSuggest.PlayAdvanceDemoActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
+
     </application>
 
 </manifest>

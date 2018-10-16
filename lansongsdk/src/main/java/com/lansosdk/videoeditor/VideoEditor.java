@@ -230,6 +230,13 @@ public class VideoEditor {
      * @return
      */
     public static native String getSDKVersion();
+
+
+    /**
+     * 获取用户使用sdk的版本类型
+     * @return
+     */
+    public static native int getLanSongSDKType();
     /**
      * 执行成功,返回0, 失败返回错误码.
      *
@@ -543,6 +550,7 @@ public class VideoEditor {
                 List<String> cmdList = new ArrayList<String>();
 
 
+                setEncodeBitRate((int)(info.vBitRate * percent));
                 cmdList.add("-vcodec");
                 cmdList.add(info.vCodecName);
 
@@ -621,112 +629,6 @@ public class VideoEditor {
         Log.e(TAG,"执行获取视频轨道 错误, !!!!");
         return null;
     }
-
-    /**
-     * 已废弃,请用AudioEditor
-     * @return
-     */
-    @Deprecated
-    public String executeVideoMergeAudio(String videoFile, String audioFile) {
-        boolean isAAC = false;
-
-        String dstFile=LanSongFileUtil.createMp4FileInBox();
-        MediaInfo vInfo = new MediaInfo(videoFile);
-        MediaInfo aInfo = new MediaInfo(audioFile);
-        if (vInfo.prepare() && aInfo.prepare()) {
-
-            if (aInfo.aCodecName.equals("aac")) {
-                isAAC = true;
-            }
-            List<String> cmdList = new ArrayList<String>();
-            cmdList.add("-i");
-            cmdList.add(videoFile);
-            cmdList.add("-i");
-            cmdList.add(audioFile);
-
-            cmdList.add("-t");
-            cmdList.add(String.valueOf(vInfo.vDuration));
-
-            cmdList.add("-vcodec");
-            cmdList.add("copy");
-            cmdList.add("-acodec");
-            cmdList.add("copy");
-            if (isAAC) {
-                cmdList.add("-absf");
-                cmdList.add("aac_adtstoasc");
-            }
-            cmdList.add("-y");
-            cmdList.add(dstFile);
-            String[] command = new String[cmdList.size()];
-            for (int i = 0; i < cmdList.size(); i++) {
-                command[i] = (String) cmdList.get(i);
-            }
-            int ret= executeVideoEditor(command);
-            if(ret==0){
-                return dstFile;
-            }else{
-                LanSongFileUtil.deleteFile(dstFile);
-                return null;
-            }
-
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 废弃, 请用AudioEditor
-     * @param videoFile
-     * @param audioFile
-     * @param audiostartS
-     * @return
-     */
-    @Deprecated
-    public String executeVideoMergeAudio(String videoFile, String audioFile,float audiostartS) {
-        boolean isAAC = false;
-        if (fileExist(videoFile) && fileExist(audioFile)) {
-
-            String dstFile=LanSongFileUtil.createMp4FileInBox();
-            if (audioFile.endsWith(".aac")) {
-                isAAC = true;
-            }else{
-                Log.w(TAG,"您的音频不是aac编码, 可能会导致合成后视频无法播放.");
-            }
-            List<String> cmdList = new ArrayList<String>();
-            cmdList.add("-i");
-            cmdList.add(videoFile);
-
-            cmdList.add("-ss");
-            cmdList.add(String.valueOf(audiostartS));
-
-            cmdList.add("-i");
-            cmdList.add(audioFile);
-            cmdList.add("-vcodec");
-            cmdList.add("copy");
-            cmdList.add("-acodec");
-            cmdList.add("copy");
-            if (isAAC) {
-                cmdList.add("-absf");
-                cmdList.add("aac_adtstoasc");
-            }
-            cmdList.add("-y");
-            cmdList.add(dstFile);
-            String[] command = new String[cmdList.size()];
-            for (int i = 0; i < cmdList.size(); i++) {
-                command[i] = (String) cmdList.get(i);
-            }
-            int ret= executeVideoEditor(command);
-            if(ret==0){
-                return dstFile;
-            }else{
-                LanSongFileUtil.deleteFile(dstFile);
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
 
 
     /**
@@ -2310,8 +2212,13 @@ public class VideoEditor {
             bitrate=encodeBitRate;
         }
 
+        if(getLanSongSDKType()==0){
+            Log.w(TAG,"您使用的是免费版本, 将不支持硬件编码加速,处理速度可能变慢,请注意!");
+        }else if(getLanSongSDKType()==1){
+            Log.w(TAG,"这是我们的演示Demo,内部的视频处理有硬件编码加速功能.");
+        }
 
-        //2018年08月06日11:21:34增加;
+
         if(isForceHWEncoder==false && noCheck16Multi==false){
             for(int i=0;i<cmdList.size();i++){
                 String cmd=cmdList.get(i);

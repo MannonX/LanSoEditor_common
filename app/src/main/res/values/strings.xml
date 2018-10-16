@@ -60,6 +60,9 @@
 
 
 	<string name="direct_play_video">直接视频播放</string>
+
+
+
 	<string name="demo_id_expend_cmd">自定义扩展功能</string>
 	<string name="demo_id_connet_us">联系我们</string>
 	<string name="custom_ffmpeg_cmd">如果您熟悉ffmpeg的命令,您可以如下自定义命令:(在VideoEditor.java中很多的类似举例,以供参考)</string>

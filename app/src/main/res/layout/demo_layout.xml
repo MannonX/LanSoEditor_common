@@ -39,6 +39,14 @@
         android:textColor="@color/red"
         android:text="以下仅为常用方法的举例,更多见VideoEditor.java源文件"/>
 
+    <Button
+        android:id="@+id/id_main_advance_demo"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="专业版 特色功能演示."
+        android:background="@drawable/main_item_btn_bg"
+        android:layout_margin="10dp"
+        android:textColor="@color/red"/>
     <ListView
         android:id="@+id/id_demo_list"
         android:layout_width="match_parent"

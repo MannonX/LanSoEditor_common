@@ -3,6 +3,7 @@ package com.example.commonDemo;
 import android.content.Context;
 import android.util.Log;
 
+import com.lansosdk.videoeditor.AudioEditor;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -26,16 +27,17 @@ public class DemoFunctions {
 		if(info.prepare())
 		{
 			String audio= CopyFileFromAssets.copyAssets(ctx,"aac20s.aac");  //举例;
-//			 return LanSongMergeAV.mergeAVDirectly(audio,srcVideo,false);  //也可以这样;但为了显示进度,采用下面形式
 
 	  		if(info.isHaveAudio()){
 				String video2=editor.executeGetVideoTrack(srcVideo);  //拿到视频轨道
-				String ret=editor.executeVideoMergeAudio(video2,audio);  //和音频合并;
+				AudioEditor audioEditor=new AudioEditor();
+				String ret=audioEditor.executeVideoReplaceAudio(video2,audio);
 				LanSongFileUtil.deleteFile(video2);
 				MediaInfo.checkFile(ret);
 				return  ret;
 	  		}else{
-				return editor.executeVideoMergeAudio(srcVideo,audio);  //和音频合并;
+				AudioEditor audioEditor=new AudioEditor();
+				return audioEditor.executeVideoReplaceAudio(srcVideo,audio);
 			}
 		}
 		return null;
