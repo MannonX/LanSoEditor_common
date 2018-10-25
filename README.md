@@ -75,9 +75,11 @@
 -  费用12000元.
 
 ### 我们有专业版SDK,图层架构,可以做各种视频特效, 并支持AE模板,微商小视频,抖音趣拍等效果: 
-     [android 专业版] https://github.com/LanSoSdk/LanSoEditor_advance
-     [ios 专业版] (https://github.com/LanSoSdk/LanSongEditor_IOS
-     欢迎您的评估使用.
+-  android: 
+  https://github.com/LanSoSdk/LanSoEditor_advance
+- ios：
+    https://github.com/LanSoSdk/LanSongEditor_IOS
+ 欢迎您的评估使用.
 
 ### 联系方式:
    -  我们是杭州蓝松科技有限公司,需要盈利来维持公司运营, 免费的用户请在issue中提交你的问题,我们会一一解答,敬请谅解;
