@@ -63,24 +63,20 @@
 ```
 
 
-# 增值服务:
-### 不免费的内容包括:
-- com.lansosdk.videoEditor.NoFree文件夹中的类.
+# 增值服务包括:
+- com.lansosdk.videoEditor.NoFree文件夹中的功能.
 - 底层硬件加速编码器;
 - 极速视频压缩功能;
-- 视频分段录制，支持回删，支持美颜，聚焦,亮度调节,按下录制,拍摄图片
-- 编辑功能界面包括: 涂鸦, 增加文字, 增加图片,变速,时长裁剪,画面裁剪.
+- 视频分段录制（支持回删，支持美颜，聚焦,亮度调节,按下录制,拍摄图片）
+- 编辑功能界面（涂鸦, 增加文字, 增加图片,变速,时长裁剪,画面裁剪）
 - 提供为期一年的 技术支持和功能定制(一年内可定制基于此版本的其它功能.) 
 - 定制的功能永久使用,我们负责维护, 速度优化. 
 - 规划需求时的视频技术咨询,可以在规划需求的时候,就向我们咨询,或许您感觉很复杂的效果,在我们看来,只需几行代码就可以实现,可以让您少走很多弯路;
 -  费用12000元.
 
-```
-	
-
 ### 我们有专业版SDK,图层架构,可以做各种视频特效, 并支持AE模板,微商小视频,抖音趣拍等效果: 
-     [android 专业版] (https://github.com/LanSoSdk/LanSoEditor_advance)
-     [ios 专业版] (https://github.com/LanSoSdk/LanSongEditor_IOS)
+     [android 专业版] https://github.com/LanSoSdk/LanSoEditor_advance
+     [ios 专业版] (https://github.com/LanSoSdk/LanSongEditor_IOS
      欢迎您的评估使用.
 
 ### 联系方式:
