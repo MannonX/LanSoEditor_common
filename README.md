@@ -79,7 +79,7 @@
   https://github.com/LanSoSdk/LanSoEditor_advance
 - ios：
     https://github.com/LanSoSdk/LanSongEditor_IOS
- 欢迎您的评估使用.
+-   欢迎您的评估使用.
 
 ### 联系方式:
    -  我们是杭州蓝松科技有限公司,需要盈利来维持公司运营, 免费的用户请在issue中提交你的问题,我们会一一解答,敬请谅解;
