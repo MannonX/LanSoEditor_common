@@ -2249,6 +2249,10 @@ public class VideoEditor {
             ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
         }else{ //先硬编码, 再软编码;
             ret=executeWithEncoder(cmdList, bitrate, dstPath, true);
+            if(ret!=0){
+                 Log.w("LanSongSDK","切换为硬解码 + 软编码 模式...");
+                ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
         }
         if(ret!=0) {
             for(int i=0;i<cmdList.size();i++){
@@ -2262,6 +2266,7 @@ public class VideoEditor {
                 }
             }
             sendEncoderEnchange();
+             Log.w("LanSongSDK","切换为软解码 + 软编码 模式...");
             ret=executeWithEncoder(cmdList, bitrate, dstPath, false);
         }
 
