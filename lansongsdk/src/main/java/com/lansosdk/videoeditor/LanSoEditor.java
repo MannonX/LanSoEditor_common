@@ -29,11 +29,13 @@ public class LanSoEditor {
         if (isLoaded)
             return;
 
-        Log.d("lansongeditor", "lansongSDK load libraries. www.lansongtech.com");
+
 
         System.loadLibrary("LanSongffmpeg");
         System.loadLibrary("LanSongdisplay");
         System.loadLibrary("LanSongplayer");
+
+        Log.d("LanSongSDK", "loaded libraries.isQiLinSoc:"+ VideoEditor.isQiLinSoc());
 
         isLoaded = true;
     }

@@ -1,5 +1,8 @@
 package com.lansosdk.videoeditor;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.IntBuffer;
 import java.util.Calendar;
 
 /**
@@ -25,19 +29,41 @@ import java.util.Calendar;
  */
 public class LanSongFileUtil {
 
-    public static final String TAG = "LanSongFileUtil";
+    public static final String TAG = "LanSongSDK";
     public static final boolean VERBOSE = false;
+    private static final Object mLock = new Object();
 
     //可以修改这个路径;
-    public static  String TMP_DIR = "/sdcard/lansongBox/";
+    public static  String DEFAULT_DIR = "/sdcard/lansongBox/";
+    public static  String TMP_DIR =DEFAULT_DIR;
+    protected static String mTmpFileSubFix="";  //后缀,
+    protected static String mTmpFilePreFix="";  //前缀;
 
+
+    public static void setTempDIR(String dir){
+        TMP_DIR=dir;
+    }
     public static String getPath() {
         File file = new File(TMP_DIR);
         if (file.exists() == false) {
-            file.mkdir();
+            if(file.mkdir()==false){
+                TMP_DIR=DEFAULT_DIR;
+                if (file.exists() == false) {
+                    file.mkdir();
+                }
+            }
         }
         return TMP_DIR;
     }
+
+    /**
+     * 获取文件创建的所在的文件夹
+     * @return
+     */
+    public static String getCreateFileDir() {
+        return getPath();
+    }
+
 
     /**
      * 返回文件大小, 单位M; 2位有效小数;
@@ -62,59 +88,67 @@ public class LanSongFileUtil {
         }
     }
 
+
+
     /**
      * 在指定的文件夹里创建一个文件名字, 名字是当前时间,指定后缀.
      *
      * @return
      */
     public static String createFile(String dir, String suffix) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH) + 1;
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int second = c.get(Calendar.SECOND);
-        int millisecond = c.get(Calendar.MILLISECOND);
-        year = year - 2000;
-        String name = dir;
-        File d = new File(name);
+        synchronized (mLock) {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH) + 1;
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            int second = c.get(Calendar.SECOND);
+            int millisecond = c.get(Calendar.MILLISECOND);
+            year = year - 2000;
 
-        // 如果目录不中存在，创建这个目录
-        if (!d.exists())
-            d.mkdir();
-        name += "/";
+            String dirPath = dir;
+            File d = new File(dirPath);
+            if (!d.exists())
+                d.mkdirs();
+
+            if (dirPath.endsWith("/") == false) {
+                dirPath += "/";
+            }
+
+            String name=mTmpFilePreFix;
+            name += String.valueOf(year);
+            name += String.valueOf(month);
+            name += String.valueOf(day);
+            name += String.valueOf(hour);
+            name += String.valueOf(minute);
+            name += String.valueOf(second);
+            name += String.valueOf(millisecond);
+            name+=mTmpFileSubFix;
+            if (suffix.startsWith(".") == false) {
+                name += ".";
+            }
+            name += suffix;
 
 
-        name += String.valueOf(year);
-        name += String.valueOf(month);
-        name += String.valueOf(day);
-        name += String.valueOf(hour);
-        name += String.valueOf(minute);
-        name += String.valueOf(second);
-        name += String.valueOf(millisecond);
-        if (suffix.startsWith(".") == false) {
-            name += ".";
-        }
-        name += suffix;
-
-        try {
-            Thread.sleep(1);  //保持文件名的唯一性.
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        File file = new File(name);
-        if (file.exists() == false) {
             try {
-                file.createNewFile();
-            } catch (IOException e) {
+                Thread.sleep(1); // 保持文件名的唯一性.
+            } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            String retPath=dirPath+name;
+            File file = new File(retPath);
+            if (file.exists() == false) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return retPath;
         }
-        return name;
     }
 
     /**
@@ -143,8 +177,21 @@ public class LanSongFileUtil {
         return createFile(TMP_DIR, ".mp3");
     }
 
+
+    /**
+     * 创建wav格式的文件路径字符串
+     * @return
+     */
     public static String createWAVFileInBox() {
         return createFile(TMP_DIR, ".wav");
+    }
+
+    /**
+     * 创建Gif文件路径字符串;
+     * @return
+     */
+    public static String createGIFFileInBox() {
+        return createFile(TMP_DIR, ".gif");
     }
 
     /**
@@ -235,7 +282,7 @@ public class LanSongFileUtil {
 //			 	String cmd="/system/bin/cp ";
 //			 	cmd+=srcPath;
 //			 	cmd+=" ";
-//			 	cmd+=dstPath;
+//			 	cmd+=drawpadDstPath;
 //				Runtime.getRuntime().exec(cmd).waitFor();
 
         File srcF = new File(srcPath);
@@ -262,6 +309,45 @@ public class LanSongFileUtil {
             File file = new File(path);
             if (file.exists()) {
                 file.delete();
+            }
+        }
+    }
+    public static void  deleteNameFiles(String prefix,String subfix)
+    {
+        deleteNameFiles(getCreateFileDir(),prefix,subfix);
+    }
+    /**
+     * 删除包含某些字符串名字的 文件;
+     * 比如要删除: /sdcard/lansongBox/lansong*.bmp(所有开头是lansong,后缀是bmp)
+     * 则prefix=lansong;  subfix=bmp;
+     * @param dir
+     * @param prefix
+     * @param subfix
+     */
+    public static void  deleteNameFiles(String dir,String prefix,String subfix)
+    {
+        File file=new File(dir);
+        for (File item : file.listFiles()){
+            if(item.isDirectory()==false){
+                String path=item.getAbsolutePath();
+                String name=LanSongFileUtil.getFileNameFromPath(path);
+                String subfix2=LanSongFileUtil.getFileSuffix(path);
+
+                if(prefix!=null && subfix!=null){
+                    if(name!=null && name.contains(prefix) && subfix2!=null && subfix2.equals(subfix)){
+                        LanSongFileUtil.deleteFile(path);
+                    }
+                }else if(prefix!=null){
+                    if(name!=null && name.contains(prefix)){
+                        LanSongFileUtil.deleteFile(path);
+                    }
+                }else if (subfix!=null){
+                    if(subfix2!=null && subfix2.equals(subfix)){
+                        LanSongFileUtil.deleteFile(path);
+                    }
+                }else{
+                    Log.e("LanSongSDK","删除指定文件失败,您设置的参数都是null");
+                }
             }
         }
     }
@@ -424,6 +510,125 @@ public class LanSongFileUtil {
         }
         // 目录此时为空，可以删除
         return dir.delete();
+    }
+
+    public static String saveIntBuffer(IntBuffer buffer,int width,int height)
+    {
+        Bitmap bmp = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
+        buffer.position(0);
+        bmp.copyPixelsFromBuffer(buffer);
+        return saveBitmap(bmp);
+    }
+    /**
+     * LSNEW
+     *
+     * @param bmp
+     */
+    public static String saveBitmap(Bitmap bmp) {
+        if (bmp != null) {
+            try {
+                BufferedOutputStream bos;
+                String name = createFileInBox("png");
+                bos = new BufferedOutputStream(new FileOutputStream(name));
+                bmp.compress(Bitmap.CompressFormat.PNG, 90, bos);
+                bos.close();
+                return name;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            Log.i("saveBitmap", "error  bmp  is null");
+        }
+        return "save Bitmap ERROR";
+    }
+    /**
+     * 读取图片的旋转的角度, 有些手机相册中的图片,有旋转角度,比如小米8拍的图片, 三星S9+拍的图片
+     *  这里得到图片角度, 实际图片需要旋转这个角度后,才使用.
+     *
+     * @param path 图片绝对路径
+     * @return 图片的旋转角度
+     */
+    public static int getBitmapDegree(String path) {
+        int degree = 0;
+        if(path==null || !LanSongFileUtil.fileExist(path)){
+            Log.e("LanSongSDK","getBitmapDegree ERROR. file is null or not exist!");
+            return 0;
+        }
+        try {
+            // 从指定路径下读取图片，并获取其EXIF信息
+            ExifInterface exifInterface = new ExifInterface(path);
+            // 获取图片的旋转信息
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    // 定义矩阵
+//    Matrix matrix = new Matrix();
+//// 【缩放图像】
+//matrix.postScale(0.8f, 0.9f);
+//// 【向左旋转】
+//matrix.postRotate(-90);
+//// 【移动图像】
+//matrix.postTranslate(100, 100);
+//// 【裁减图像】
+//Bitmap.createBitmap(Bitmap source, int x, int y, int width, int height, Matrix m, boolean filter)/**
+    /** 旋转图片，使图片保持正确的方向。
+     *
+     * @param bitmap  原始图片
+     * @param degrees 原始图片的角度
+     * @return Bitmap 旋转后的图片
+     */
+    public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
+        if (degrees == 0 || null == bitmap) {
+            return bitmap;
+        }
+        Matrix matrix = new Matrix();
+        matrix.setRotate(degrees, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+        Bitmap bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        bitmap.recycle();
+        return bmp;
+    }
+
+
+    public static Bitmap intBufferToBitmap(IntBuffer buffer, int w, int h){
+        Bitmap stitchBmp = Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_8888);
+        stitchBmp.copyPixelsFromBuffer(buffer);
+        return stitchBmp;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static boolean deleteDefaultDir() {
+        File file=new File(TMP_DIR);
+        if (file.isDirectory()) {
+            String[] children = file.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(file, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return file.delete();
     }
     /**
      *测试

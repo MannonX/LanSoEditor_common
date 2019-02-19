@@ -173,7 +173,7 @@ public class DemoFunctions {
 		MediaInfo info=new MediaInfo(srcVideo);
     	if(info.prepare())
     	{
-    		return editor.executeGetAllFrames(srcVideo,info.vCodecName, LanSongFileUtil.getPath(),"img");
+    		return editor.executeGetAllFrames(srcVideo,info.vCodecName, "img");
     	}else{
     		return -1;
     	}
