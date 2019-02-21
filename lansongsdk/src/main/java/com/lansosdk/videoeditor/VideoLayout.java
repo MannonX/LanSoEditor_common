@@ -2,6 +2,8 @@ package com.lansosdk.videoeditor;
 
 import android.util.Log;
 
+import com.lansosdk.box.LSLog;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +27,7 @@ public class VideoLayout extends VideoEditor {
 
     //2018年5月29日16:52:43增加音频;
 
-    private static final String TAG = "LanSongSDK";
+    private static final String TAG = LSLog.TAG;
 
     /**
      * 是否使用软件解码器

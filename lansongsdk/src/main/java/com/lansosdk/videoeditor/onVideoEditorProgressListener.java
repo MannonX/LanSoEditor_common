@@ -1,11 +1,5 @@
 package com.lansosdk.videoeditor;
 
-/**
- * VideoEditor进度执行回调;
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
- */
 public interface onVideoEditorProgressListener {
 	/**
 	 * 

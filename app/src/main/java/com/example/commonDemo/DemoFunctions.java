@@ -1,9 +1,8 @@
 package com.example.commonDemo;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.lansosdk.videoeditor.AudioEditor;
+import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -27,17 +26,16 @@ public class DemoFunctions {
 		if(info.prepare())
 		{
 			String audio= CopyFileFromAssets.copyAssets(ctx,"aac20s.aac");  //举例;
+//			 return LanSongMergeAV.mergeAVDirectly(audio,srcVideo,false);  //也可以这样;但为了显示进度,采用下面形式
 
 	  		if(info.isHaveAudio()){
 				String video2=editor.executeGetVideoTrack(srcVideo);  //拿到视频轨道
-				AudioEditor audioEditor=new AudioEditor();
-				String ret=audioEditor.executeVideoReplaceAudio(video2,audio);
+				String ret=editor.executeVideoMergeAudio(video2,audio);  //和音频合并;
 				LanSongFileUtil.deleteFile(video2);
 				MediaInfo.checkFile(ret);
 				return  ret;
 	  		}else{
-				AudioEditor audioEditor=new AudioEditor();
-				return audioEditor.executeVideoReplaceAudio(srcVideo,audio);
+				return editor.executeVideoMergeAudio(srcVideo,audio);  //和音频合并;
 			}
 		}
 		return null;
@@ -108,7 +106,6 @@ public class DemoFunctions {
 	 */
 	public static String demoVideoCompress(VideoEditor editor, String srcVideo)
 	{
-		
 		return editor.executeVideoCompress(srcVideo, 0.7f);
 	}
 	/**
@@ -121,8 +118,8 @@ public class DemoFunctions {
 		MediaInfo info=new MediaInfo(srcVideo);
 		if(info.prepare())
 		{
-	    	int w=VideoEditor.make16Closest(info.getWidth()/2);
-	    	int h=VideoEditor.make16Closest(info.getHeight()/2);
+	    	int w= VideoEditor.make16Closest(info.getWidth()/2);
+	    	int h= VideoEditor.make16Closest(info.getHeight()/2);
     		return editor.executeCropVideoFrame(srcVideo, w,h, 0, 0);
 		}else{
 			return null;
@@ -139,8 +136,8 @@ public class DemoFunctions {
 		MediaInfo info=new MediaInfo(srcVideo);
 		if(info.prepare())
 		{
-			int width=VideoEditor.make16Closest(info.getWidth()/2);
-			int height=VideoEditor.make16Closest(info.getHeight()/2);
+			int width= VideoEditor.make16Closest(info.getWidth()/2);
+			int height= VideoEditor.make16Closest(info.getHeight()/2);
 			return editor.executeScaleVideoFrame(srcVideo, width,height);
 		}else{
 			return null;
@@ -236,7 +233,7 @@ public class DemoFunctions {
 		if(info.prepare())
 		{
 			//先把数据 16字节对齐;
-			int width=VideoEditor.make16Next(info.getWidth());
+			int width= VideoEditor.make16Next(info.getWidth());
 			int height= VideoEditor.make16Next(info.getHeight());
 
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lansoeditor.demo.R;
+import com.lansosdk.NoFree.LSOVideoCompress;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -127,8 +128,10 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_test_cmd_btn:
-                if (isRunning == false) {
-                    new SubAsyncTask().execute();  //开始VideoEditor方法的处理==============>
+                if(demoID==R.string.demo_id_videocompress && !LSOVideoCompress.isNeedCompress(srcVideo)){
+                    DemoUtil.showHintDialog(AVEditorDemoActivity.this, "当前视频没有压缩的空间.");
+                }else if (!isRunning) {
+                        new SubAsyncTask().execute();  //开始VideoEditor方法的处理==============>
                 }
                 break;
             case R.id.id_test_cmdvideo_play_btn:
@@ -187,7 +190,6 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
             case R.string.demo_id_cutvideo: //剪切视频
                 dstVideo = DemoFunctions.demoVideoCut(mEditor, srcVideo);
                 break;
-
             case R.string.demo_id_avsplit: //音视频分离.
                 dstAudio = mEditor.executeGetAudioTrack(srcVideo);
                 dstVideo = mEditor.executeGetVideoTrack(srcVideo);
@@ -196,7 +198,12 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
                 dstVideo = DemoFunctions.demoVideoConcat(mEditor, srcVideo);
                 break;
             case R.string.demo_id_videocompress:
-                dstVideo = DemoFunctions.demoVideoCompress(mEditor, srcVideo);
+                if(LSOVideoCompress.isNeedCompress(srcVideo)){
+                    dstVideo = DemoFunctions.demoVideoCompress(mEditor, srcVideo);
+                }else{
+
+                }
+
                 break;
             case R.string.demo_id_videocrop:
                 dstVideo = DemoFunctions.demoFrameCrop(mEditor, srcVideo);

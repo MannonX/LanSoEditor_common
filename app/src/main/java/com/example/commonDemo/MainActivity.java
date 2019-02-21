@@ -28,11 +28,15 @@ import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
-import com.example.advanceSuggest.ListAdvanceDemoActivity;
+import com.example.commonDemo.advanceSuggest.ListAdvanceDemoActivity;
+import com.example.commonDemo.noFree.ListNoFreeActivity;
 import com.lansoeditor.demo.R;
+import com.lansosdk.NoFree.AudioPadExecute;
+import com.lansosdk.box.AudioLayer;
+import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.LanSoEditor;
-import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
@@ -40,7 +44,7 @@ import java.io.File;
 public class MainActivity extends Activity {
 
     private DemoInfo[] mTestCmdArray = {
-            new DemoInfo(R.string.demo_id_mediainfo, R.string.demo_id_mediainfo, false, false),
+
             new DemoInfo(R.string.demo_id_avmerge, R.string.demo_more_avmerge, true, false),
             new DemoInfo(R.string.demo_id_cutaudio, R.string.demo_more_cutaudio, false, true),
             new DemoInfo(R.string.demo_id_cutvideo, R.string.demo_more_cutvideo, true, false),
@@ -49,7 +53,7 @@ public class MainActivity extends Activity {
             new DemoInfo(R.string.demo_id_concatvideo, R.string.demo_more_concatvideo, true, false),
 
             new DemoInfo(R.string.demo_id_videocrop, R.string.demo_more_videocrop, true, false),
-            new DemoInfo(R.string.demo_id_videoscale_soft, R.string.demo_more_videoscale_soft, true, false),
+            new DemoInfo(R.string.demo_id_videocompress, R.string.demo_id_videocompress, true, false),
 
             new DemoInfo(R.string.demo_id_videowatermark, R.string.demo_more_videowatermark, true, false),
             new DemoInfo(R.string.demo_id_videocropwatermark, R.string.demo_more_videocropwatermark, true, false),
@@ -63,7 +67,7 @@ public class MainActivity extends Activity {
             new DemoInfo(R.string.demo_id_videopad, R.string.demo_more_videopad, true, false),
 
             new DemoInfo(R.string.demo_id_videoadjustspeed, R.string
-            .demo_more_videoadjustspeed, true, false),
+                    .demo_more_videoadjustspeed, true, false),
             new DemoInfo(R.string.demo_id_videomirrorh, R.string
                     .demo_more_videomirrorh, true, false),
             new DemoInfo(R.string.demo_id_videomirrorv, R.string
@@ -79,12 +83,14 @@ public class MainActivity extends Activity {
             new DemoInfo(R.string.demo_id_avreverse, R.string
                     .demo_more_avreverse, true, false),
 
+
             new DemoInfo(R.string.demo_id_videolayout, R.string
                     .demo_id_videolayout, true, false),
 
             new DemoInfo(R.string.demo_id_expend_cmd, R.string.demo_id_expend_cmd, false, false),
-            new DemoInfo(R.string.direct_play_video, R.string.direct_play_video, false, false)
-        };
+            new DemoInfo(R.string.direct_play_video, R.string.direct_play_video, false, false),
+            new DemoInfo(R.string.demo_id_nofree, R.string.demo_id_nofree, false, false)
+    };
 
 
     private ListView mListView = null;
@@ -106,8 +112,6 @@ public class MainActivity extends Activity {
         initView();
 
         showHintDialog();
-
-        testFile();
     }
 
     @Override
@@ -121,17 +125,23 @@ public class MainActivity extends Activity {
         LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR)); //删除dir
     }
 
+    /**
+     * 各种item, 从这里传递到 AVEditorDemoActivity中
+     *
+     * @param position
+     */
     private void startActivity(int position) {
-            DemoInfo demo = mTestCmdArray[position];
-            Intent intent = new Intent(MainActivity.this, AVEditorDemoActivity.class);
+        DemoInfo demo = mTestCmdArray[position];
+        Intent intent = new Intent(MainActivity.this, AVEditorDemoActivity.class);
 
-            intent.putExtra("videopath1", tvVideoPath.getText().toString());
-            intent.putExtra("outvideo", demo.isOutVideo);
-            intent.putExtra("outaudio", demo.isOutAudio);
-            intent.putExtra("demoID", demo.mHintId);
-            intent.putExtra("textID", demo.mTextId);
-            startActivity(intent);
+        intent.putExtra("videopath1", tvVideoPath.getText().toString());
+        intent.putExtra("outvideo", demo.isOutVideo);
+        intent.putExtra("outaudio", demo.isOutAudio);
+        intent.putExtra("demoID", demo.mHintId);
+        intent.putExtra("textID", demo.mTextId);
+        startActivity(intent);
     }
+
     //直接播放视频.
     private void startVideoPlayer() {
         Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
@@ -168,6 +178,19 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+        findViewById(R.id.id_main_nofree_demo).setOnClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if (checkPath()) {
+                    Intent intent = new Intent(MainActivity.this, ListNoFreeActivity.class);
+                    intent.putExtra("videopath", tvVideoPath.getText().toString());
+                    startActivity(intent);
+                }
+            }
+        });
+
+
         tvVideoPath = (TextView) findViewById(R.id.id_main_tvvideo);
 
         findViewById(R.id.id_main_select_video).setOnClickListener(new OnClickListener() {
@@ -181,30 +204,33 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                new CopyDefaultVideoAsyncTask(MainActivity.this, tvVideoPath, "dy_xialu2.mp4")
+                new CopyVideoAsync(MainActivity.this, tvVideoPath, "dy_xialu2.mp4")
                         .execute();
             }
         });
         mListView = (ListView) findViewById(R.id.id_demo_list);
         mListView.setAdapter(new SoftApAdapter(MainActivity.this));
 
+        /**
+         * 在这里相应每个item的按下;
+         */
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if(position==0){  //获取信息;
-                    Intent intent = new Intent(MainActivity.this, MediaInfoActivity.class);
-                    intent.putExtra("videopath", tvVideoPath.getText().toString());
-                    startActivity(intent);
-                }
-                else if (position == mTestCmdArray.length - 1) {  //直接视频播放
+                if (position == mTestCmdArray.length - 1) {  //付费功能
+                        if (checkPath()) {
+                            Intent intent = new Intent(MainActivity.this, ListNoFreeActivity.class);
+                            intent.putExtra("videopath", tvVideoPath.getText().toString());
+                            startActivity(intent);
+                        }
+                }else if (position == mTestCmdArray.length - 2) {  //直接视频播放
                     startVideoPlayer();
-                } else if (position == mTestCmdArray.length - 2) {  //自定义
+                } else if (position == mTestCmdArray.length - 3) {  //自定义
                     Intent intent = new Intent(MainActivity.this, CustomFunctionActivity.class);
                     startActivity(intent);
 
-                } else if (position == mTestCmdArray.length - 3) {  //视频布局
+                } else if (position == mTestCmdArray.length - 4) {  //视频布局
                     startVideoLayout();
                 } else {
                     if (checkPath()) {
@@ -256,7 +282,7 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "文件不存在", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
-                MediaInfo info = new MediaInfo(path, false);
+                MediaInfo info = new MediaInfo(path);
                 boolean ret = info.prepare();
                 if (ret == false) {
                     showHintDialog("可能不是音视频文件");
@@ -265,6 +291,7 @@ public class MainActivity extends Activity {
             }
         }
     }
+
     //--------------------------------------------------------------
     @SuppressLint("NewApi")
     public static boolean selfPermissionGranted(Context context, String permission) {
@@ -292,8 +319,8 @@ public class MainActivity extends Activity {
 
     private void showHintDialog() {
 
-       String timeHint = "欢迎使用蓝松短视频SDK 免费版本.\n 当前版本是:"+VideoEditor.getSDKVersion()+
-               "\n\n 我们提供有偿提供技术支持和定制服务,欢迎你的测试与合作; ";
+        String timeHint = "欢迎使用蓝松短视频SDK 免费版本.\n 当前版本是:" + VideoEditor.getSDKVersion() +
+                "\n\n 我们编写了34个常见功能, 一下仅是部分举例,详情请参考我们的PDF功能列表; ";
 
         new AlertDialog.Builder(this).setTitle("提示").setMessage(timeHint).setPositiveButton("确定", new DialogInterface
                 .OnClickListener() {
@@ -310,10 +337,10 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
             }
         }).show();
     }
+
     //------------------------------------------
     private class SoftApAdapter extends BaseAdapter {
 
@@ -379,17 +406,19 @@ public class MainActivity extends Activity {
             }
         });
     }
-    public class CopyDefaultVideoAsyncTask extends AsyncTask<Object, Object, Boolean> {
+
+    public class CopyVideoAsync extends AsyncTask<Object, Object, Boolean> {
         private ProgressDialog mProgressDialog;
         private Context mContext = null;
         private TextView tvHint;
         private String fileName;
+
         /**
          * @param ctx
          * @param tvhint 拷贝后, 把拷贝到的目标完整路径显示到这个TextView上.
          * @param file   需要拷贝的文件名字.
          */
-        public CopyDefaultVideoAsyncTask(Context ctx, TextView tvhint, String file) {
+        public CopyVideoAsync(Context ctx, TextView tvhint, String file) {
             mContext = ctx;
             tvHint = tvhint;
             fileName = file;
@@ -430,8 +459,4 @@ public class MainActivity extends Activity {
 
         }
     }
-
-    private void testFile(){
-    }
-
 }

@@ -1,1 +1,1 @@
-include ':app', ':lansongsdk'
+include ':app', ':LanSongSDK'

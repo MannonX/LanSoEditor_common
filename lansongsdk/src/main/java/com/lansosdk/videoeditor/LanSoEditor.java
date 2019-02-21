@@ -9,19 +9,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-/**
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
- */
 public class LanSoEditor {
 
 
     private static boolean isLoaded = false;
 
     public static void initSDK(Context context, String str) {
-        loadLibraries();
+        loadLibraries(); // 拿出来单独加载库文件.
         LanSoEditor.initSo(context, str);
-        VideoEditor.logEnable(context);  //使能;
+
+//        checkCPUName();
+
     }
 
 
@@ -35,8 +33,7 @@ public class LanSoEditor {
         System.loadLibrary("LanSongdisplay");
         System.loadLibrary("LanSongplayer");
 
-        Log.d("LanSongSDK", "loaded libraries.isQiLinSoc:"+ VideoEditor.isQiLinSoc());
-
+        Log.d("LanSongSDK", "loaded libraries....is QiLinSoc."+VideoEditor.isQiLinSoc());
         isLoaded = true;
     }
 
@@ -52,5 +49,26 @@ public class LanSoEditor {
 
     public static native void nativeUninit();
 
+    private static void checkCPUName() {
+        String str1 = "/proc/cpuinfo";
+        String str2 = "";
+        try {
+            FileReader fr = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+            str2 = localBufferedReader.readLine();
+            while (str2 != null) {
+                if(str2.contains("SDM845")){  //845的平台;
+                    VideoEditor.isForceSoftWareEncoder=true;
+                }
+                else if(str2.contains("")){
 
+                }
+
+                str2 = localBufferedReader.readLine();
+            }
+            localBufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

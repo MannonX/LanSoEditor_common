@@ -35,11 +35,7 @@ import java.util.Map;
 
 
 /**
- *
- *
- * 杭州蓝松科技有限公司
- * www.lansongtech.com
- *
+ * 
  */
 public class VideoPlayer  {
     private final static String TAG = "VideoPlayer";

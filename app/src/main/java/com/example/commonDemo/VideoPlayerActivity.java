@@ -75,7 +75,7 @@ public class VideoPlayerActivity extends Activity {
          str+=String.valueOf(screenHeight);
          tvScreen.setText(str);
 
-         mInfo=new MediaInfo(videoPath,false);
+         mInfo=new MediaInfo(videoPath);
          if(mInfo.prepare()==false){
         	 showHintDialog();
         	 isSupport=false;

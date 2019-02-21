@@ -6,6 +6,8 @@ import android.media.ExifInterface;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
@@ -29,7 +31,7 @@ import java.util.Calendar;
  */
 public class LanSongFileUtil {
 
-    public static final String TAG = "LanSongSDK";
+    public static final String TAG = LSLog.TAG;
     public static final boolean VERBOSE = false;
     private static final Object mLock = new Object();
 
@@ -83,6 +85,8 @@ public class LanSongFileUtil {
                 float size2 = (float) size / (1024f * 1024f);
 
                 int n = (int) (size2 * 100f);  //截断
+
+                Log.e("LSDelete", "---XXX--return : "+ (float) n / 100f);
                 return (float) n / 100f;
             }
         }
@@ -346,7 +350,7 @@ public class LanSongFileUtil {
                         LanSongFileUtil.deleteFile(path);
                     }
                 }else{
-                    Log.e("LanSongSDK","删除指定文件失败,您设置的参数都是null");
+                    LSLog.e("删除指定文件失败,您设置的参数都是null");
                 }
             }
         }
@@ -552,7 +556,7 @@ public class LanSongFileUtil {
     public static int getBitmapDegree(String path) {
         int degree = 0;
         if(path==null || !LanSongFileUtil.fileExist(path)){
-            Log.e("LanSongSDK","getBitmapDegree ERROR. file is null or not exist!");
+            LSLog.e("getBitmapDegree ERROR. file is null or not exist!");
             return 0;
         }
         try {
@@ -588,7 +592,7 @@ public class LanSongFileUtil {
 //matrix.postTranslate(100, 100);
 //// 【裁减图像】
 //Bitmap.createBitmap(Bitmap source, int x, int y, int width, int height, Matrix m, boolean filter)/**
-    /** 旋转图片，使图片保持正确的方向。
+     /** 旋转图片，使图片保持正确的方向。
      *
      * @param bitmap  原始图片
      * @param degrees 原始图片的角度
@@ -606,6 +610,14 @@ public class LanSongFileUtil {
     }
 
 
+    /**
+     * LSNEW
+     *
+     * @param buffer
+     * @param w
+     * @param h
+     * @return
+     */
     public static Bitmap intBufferToBitmap(IntBuffer buffer, int w, int h){
         Bitmap stitchBmp = Bitmap.createBitmap(w,h, Bitmap.Config.ARGB_8888);
         stitchBmp.copyPixelsFromBuffer(buffer);
@@ -613,6 +625,7 @@ public class LanSongFileUtil {
     }
 
     /**
+     * LSNEW
      *
      * @return
      */

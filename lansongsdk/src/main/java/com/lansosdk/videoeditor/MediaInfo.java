@@ -107,8 +107,6 @@ public class MediaInfo {
 	public String aCodecName;
 	private boolean getSuccess = false;
 
-//	private boolean isCheckCodec = true; // 是否检测
-
 	/**
 	 * 构造方法, 输入文件路径; 注意: 创建对象后, 需要执行 {@link #prepare()}后才可以使用.
 	 *
@@ -121,16 +119,14 @@ public class MediaInfo {
 	}
 
 	/**
-	 * @param path
-	 * @param checkCodec 默认是true,即检测解码器. 如不想检测解码器,则设置为false;这样执行prepare会快一些.
+	 * 已废弃,不用.
 	 */
 	@Deprecated
-	public MediaInfo(String path, boolean checkCodec) {
+	public MediaInfo(String path,boolean is) {
 		filePath = path;
 		fileName = getFileNameFromPath(path);
 		fileSuffix = getFileSuffix(path);
 	}
-
 	/**
 	 * 是否支持.
 	 *
@@ -139,7 +135,7 @@ public class MediaInfo {
 	 */
 	public static boolean isSupport(String videoPath) {
 		if (fileExist(videoPath)) {
-			MediaInfo info = new MediaInfo(videoPath, false);
+			MediaInfo info = new MediaInfo(videoPath);
 			return info.prepare();
 		} else {
 			if (VERBOSE)
@@ -168,7 +164,7 @@ public class MediaInfo {
 			} else if (file.length() == 0) {
 				ret = "文件存在,但文件的大小为0字节(可能您只创建文件,但没有进行各种调用设置导致的.)." + videoPath;
 			} else {
-				MediaInfo info = new MediaInfo(videoPath, false);
+				MediaInfo info = new MediaInfo(videoPath);
 				if (info.fileSuffix.equals("pcm")
 						|| info.fileSuffix.equals("yuv")) {
 					String str = "文件路径:" + info.filePath + "\n";

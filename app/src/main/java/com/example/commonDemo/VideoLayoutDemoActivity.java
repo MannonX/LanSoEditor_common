@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.lansoeditor.demo.R;
+import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.VideoLayout;

@@ -72,6 +72,25 @@
       <style name="dialog" parent="@android:style/Theme.Dialog">
         <item name="android:textSize">25sp</item>
     </style>
-    
+
+    <style name="main_item_reletivelayout2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dip</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/mainlist_item_btn_bg</item>
+        <item name="android:layout_marginTop">20dip</item>
+        <item name="android:layout_marginLeft">6dip</item>
+        <item name="android:layout_marginRight">6dip</item>
+    </style>
+    <style name="main_item_textview">
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/red</item>
+
+    </style>
       	   
 </resources>

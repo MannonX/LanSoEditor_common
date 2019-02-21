@@ -12,6 +12,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.lansosdk.box.LSLog;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,13 +42,13 @@ import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
  */
 public class VideoEditor {
 
-    private static final String TAG ="LanSongSDK";
+    private static final String TAG = LSLog.TAG;
 
     public static final String version="VideoEditor_20100101";
     /**
      * 使用软件编码的列表;
      */
-    public static String[] QilinCpulist ={
+    public static String[] qilinCpulist ={
             "EML-AL00",
             "EML-AL01",
             "LON-AL00",
@@ -2542,7 +2544,7 @@ public class VideoEditor {
             }
 
             if(startX4>=0 && startY4>=0 && width4>0 && height4>0){
-                String filter4 = String.format(Locale.getDefault(), ";[d3]delogo=x=%d:y=%d:w=%d:h=%d",
+               String filter4 = String.format(Locale.getDefault(), ";[d3]delogo=x=%d:y=%d:w=%d:h=%d",
                         startX4,startY4,width4,height4);
                 filter+=filter4;
             }
@@ -2853,7 +2855,7 @@ public class VideoEditor {
      */
     public String executeAddTextToMp4(String srcPath,String text)
     {
-        // ffmpeg -i d1.mp4 -metadata description="LanSon\"g \"Text"
+       // ffmpeg -i d1.mp4 -metadata description="LanSon\"g \"Text"
         //  -acodec copy -vcodec copy t1.mp4
         if(fileExist(srcPath) && text!=null) {
             String retPath = LanSongFileUtil.createMp4FileInBox();
@@ -2897,8 +2899,8 @@ public class VideoEditor {
      */
     public String executeGetTextFromMp4(String srcPath)
     {
-        //LSTODO. 暂时预留.
-        return null;
+            //LSTODO. 暂时预留.
+         return null;
     }
     /**
      * 获取lansosdk的建议码率;
@@ -3099,7 +3101,7 @@ public class VideoEditor {
      */
     public boolean checkSoftEncoder()
     {
-        for(String item: QilinCpulist){
+        for(String item: qilinCpulist){
             if(item.contains(Build.MODEL) && isSupportNV21ColorFormat()==false){
                 isForceSoftWareEncoder=true;
                 return true;
@@ -3116,19 +3118,16 @@ public class VideoEditor {
     }
 
     //是否是麒麟处理器.
-    //是否是麒麟处理器.
     public static boolean isQiLinSoc()
     {
-        for(String item: QilinCpulist){
+        for(String item: qilinCpulist){
             if(item.contains(Build.MODEL)){
                 return true;
             }
         }
         if(Build.MODEL!=null) {
-            Log.d(TAG,"Build.module:"+Build.MODEL);
-
-            if (Build.MODEL.contains("-AL") || Build.MODEL.contains("-CL00")
-                    ||Build.MODEL.contains("-TL")) {
+            if (Build.MODEL.contains("-AL") || Build.MODEL.contains("-CL00") || Build.MODEL.contains("-AL00")
+                    || Build.MODEL.contains("-TL")) {
                 return true;
             }
         }
@@ -3256,7 +3255,7 @@ public class VideoEditor {
         return null;
     }
     private static boolean selectColorFormat(MediaCodecInfo codecInfo,
-                                             String mimeType) {
+                                        String mimeType) {
         MediaCodecInfo.CodecCapabilities capabilities = codecInfo
                 .getCapabilitiesForType(mimeType);
         for (int i = 0; i < capabilities.colorFormats.length; i++) {
@@ -3326,4 +3325,66 @@ public class VideoEditor {
         }
     }
 
+    public String testGetAudioM4a(String srcPath) {
+
+        String dstPath=LanSongFileUtil.createM4AFileInBox();
+
+        List<String> cmdList = new ArrayList<String>();
+        cmdList.add("-i");
+        cmdList.add(srcPath);
+        cmdList.add("-vn");
+        cmdList.add("-acodec");
+        cmdList.add("libfaac");
+        cmdList.add("-b:a");
+        cmdList.add("64000");
+        cmdList.add("-y");
+        cmdList.add(dstPath);
+
+        String[] command = new String[cmdList.size()];
+        for (int i = 0; i < cmdList.size(); i++) {
+            command[i] = (String) cmdList.get(i);
+        }
+       if(executeVideoEditor(command)==0){
+            return dstPath;
+       }else{
+            LSLog.e("executeGetAudioTrack error");
+            return null;
+       }
+    }
+    public int testVideoMergeAudio(String video, String audio,String dstPath) {
+
+
+            List<String> cmdList = new ArrayList<String>();
+            cmdList.add("-i");
+            cmdList.add(video);
+
+            cmdList.add("-i");
+            cmdList.add(audio);
+
+
+            cmdList.add("-map");
+            cmdList.add("0:v");
+
+            cmdList.add("-map");
+            cmdList.add("1:a");
+
+            cmdList.add("-vcodec");
+            cmdList.add("copy");
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+
+            cmdList.add("-absf");
+            cmdList.add("aac_adtstoasc");
+
+
+            cmdList.add("-y");
+            cmdList.add(dstPath);
+            String[] command = new String[cmdList.size()];
+            for (int i = 0; i < cmdList.size(); i++) {
+                command[i] = (String) cmdList.get(i);
+            }
+            VideoEditor editor = new VideoEditor();
+            return editor.executeVideoEditor(command);
+    }
 }

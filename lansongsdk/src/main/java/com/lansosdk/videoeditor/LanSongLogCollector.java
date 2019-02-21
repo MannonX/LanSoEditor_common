@@ -3,6 +3,8 @@ package com.lansosdk.videoeditor;
 import android.content.Context;
 import android.util.Log;
 
+import com.lansosdk.videoeditor.LanSongFileUtil;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,8 +22,6 @@ import java.util.List;
  */
 public class LanSongLogCollector implements Runnable {
     private static final String TAG = "LanSongLogCollector";
-
-
     private Process process;
 
     private Context context;
@@ -269,7 +269,6 @@ public class LanSongLogCollector implements Runnable {
         commandList.add("logcat");
         commandList.add("-f");
         logFilePath = LanSongFileUtil.createFileInBox("log");
-        Log.i(TAG, "createLogCollector: LSTODO file:" + logFilePath);
 
         commandList.add(logFilePath);
 

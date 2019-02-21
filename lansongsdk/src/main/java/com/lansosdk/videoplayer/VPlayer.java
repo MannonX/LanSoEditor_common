@@ -31,10 +31,7 @@ import java.util.Map;
  *  此代码仅仅是 VideoPlayer 的简易封装, 目的是让代码更清晰一些. 
  *  
  *  一切API 以 {@link VideoPlayer}中的为准.
- *
- *杭州蓝松科技有限公司
- * www.lansongtech.com
- *
+ *  
  *
  */
 public class VPlayer {

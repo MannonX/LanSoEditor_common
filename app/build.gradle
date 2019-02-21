@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.lansoeditor.demo"
@@ -21,5 +20,5 @@ android {
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation files('libs/PermissionsManager.jar')
-    implementation project(':lansongsdk')
+    implementation project(':LanSongSDK')
 }
