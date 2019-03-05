@@ -17,7 +17,7 @@ import com.example.commonDemo.VideoPlayerActivity;
 import com.lansoeditor.demo.R;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-import com.lansosdk.NoFree.LSOVideoCompress;
+import com.lansosdk.NoFree.LSOVideoScale;
 import com.lansosdk.NoFree.onVideoCompressCompletedListener;
 import com.lansosdk.NoFree.onVideoCompressProgressListener;
 
@@ -28,7 +28,7 @@ public class VideoCompressActivity extends Activity{
     private TextView tvBefore;
     private TextView tvAfter;
     private Button btnPreview;
-    private static final String TAG="LSOVideoCompress";
+    private static final String TAG="LSOVideoScale";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,19 +65,19 @@ public class VideoCompressActivity extends Activity{
         }
     }
 
-    LSOVideoCompress videoCompress;
+    LSOVideoScale videoCompress;
     LSProgressDialog progressDialog;
     /**
      * 开始压缩
      */
     private void startCompress(){
-        if(!LSOVideoCompress.isNeedCompress(videoPath)){
+        if(!LSOVideoScale.isNeedCompress(videoPath)){
             DemoUtil.showHintDialog(VideoCompressActivity.this,"文件大小不超过3M, 没必要压缩");
         }else{
             progressDialog=new LSProgressDialog();
             progressDialog.show(VideoCompressActivity.this);
 
-            videoCompress=new LSOVideoCompress(getApplication(),videoPath);
+            videoCompress=new LSOVideoScale(getApplication(),videoPath);
             videoCompress.setOnVideoCompressCompletedListener(new onVideoCompressCompletedListener() {
                 @Override
                 public void onCompleted(String video) {

@@ -32,7 +32,10 @@ import com.example.commonDemo.advanceSuggest.ListAdvanceDemoActivity;
 import com.example.commonDemo.noFree.ListNoFreeActivity;
 import com.lansoeditor.demo.R;
 import com.lansosdk.NoFree.AudioPadExecute;
+import com.lansosdk.NoFree.LSOCompressVideo;
 import com.lansosdk.box.AudioLayer;
+import com.lansosdk.box.OnCompressCompletedListener;
+import com.lansosdk.box.OnCompressProgressListener;
 import com.lansosdk.videoeditor.CopyFileFromAssets;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lansosdk.videoeditor.LanSongFileUtil;
@@ -40,6 +43,7 @@ import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends Activity {
 
@@ -112,6 +116,8 @@ public class MainActivity extends Activity {
         initView();
 
         showHintDialog();
+
+        testFile();
     }
 
     @Override
@@ -456,7 +462,8 @@ public class MainActivity extends Activity {
             } else {
                 Toast.makeText(mContext, "抱歉! 默认视频文件拷贝失败,请联系我们:视频样片路径:" + str, Toast.LENGTH_SHORT).show();
             }
-
         }
+    }
+    private  void testFile(){
     }
 }

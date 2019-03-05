@@ -269,6 +269,7 @@ public class LanSongLogCollector implements Runnable {
         commandList.add("logcat");
         commandList.add("-f");
         logFilePath = LanSongFileUtil.createFileInBox("log");
+        Log.i(TAG, "createLogCollector: LSTODO file:" + logFilePath);
 
         commandList.add(logFilePath);
 

@@ -61,6 +61,7 @@ public class ExtractFrameDemoActivity extends Activity {
         if (mInfo.prepare() == false || mInfo.isHaveVideo() == false) {
             return;
         }
+        Log.i("LSTODO", "info si "+mInfo);
         /**
          * 初始化.
          */

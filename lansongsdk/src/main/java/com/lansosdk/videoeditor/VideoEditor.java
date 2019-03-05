@@ -3054,7 +3054,7 @@ public class VideoEditor {
 
             if(isQiLinSoc()){
                 cmdList2.add("nv21");
-                setForceColorFormat(21);
+                setForceColorFormat(21);  //LSTODO, 没有全面测试...
             }else{
                 cmdList2.add("yuv420p");
             }
@@ -3126,8 +3126,7 @@ public class VideoEditor {
             }
         }
         if(Build.MODEL!=null) {
-            if (Build.MODEL.contains("-AL") || Build.MODEL.contains("-CL00") || Build.MODEL.contains("-AL00")
-                    || Build.MODEL.contains("-TL")) {
+            if (Build.MODEL.contains("-AL00") || Build.MODEL.contains("-CL00")) {
                 return true;
             }
         }

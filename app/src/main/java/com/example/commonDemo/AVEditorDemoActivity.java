@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lansoeditor.demo.R;
-import com.lansosdk.NoFree.LSOVideoCompress;
+import com.lansosdk.NoFree.LSOVideoScale;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -128,7 +128,7 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_test_cmd_btn:
-                if(demoID==R.string.demo_id_videocompress && !LSOVideoCompress.isNeedCompress(srcVideo)){
+                if(demoID==R.string.demo_id_videocompress && !LSOVideoScale.isNeedCompress(srcVideo)){
                     DemoUtil.showHintDialog(AVEditorDemoActivity.this, "当前视频没有压缩的空间.");
                 }else if (!isRunning) {
                         new SubAsyncTask().execute();  //开始VideoEditor方法的处理==============>
@@ -198,7 +198,7 @@ public class AVEditorDemoActivity extends Activity implements OnClickListener {
                 dstVideo = DemoFunctions.demoVideoConcat(mEditor, srcVideo);
                 break;
             case R.string.demo_id_videocompress:
-                if(LSOVideoCompress.isNeedCompress(srcVideo)){
+                if(LSOVideoScale.isNeedCompress(srcVideo)){
                     dstVideo = DemoFunctions.demoVideoCompress(mEditor, srcVideo);
                 }else{
 

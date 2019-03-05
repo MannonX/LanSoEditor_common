@@ -18,7 +18,7 @@ public class LanSoEditor {
         loadLibraries(); // 拿出来单独加载库文件.
         LanSoEditor.initSo(context, str);
 
-//        checkCPUName();
+        checkCPUName();
 
     }
 
@@ -27,13 +27,12 @@ public class LanSoEditor {
         if (isLoaded)
             return;
 
-
+        Log.d("lansoeditor", "load libraries.....LanSongffmpeg.");
 
         System.loadLibrary("LanSongffmpeg");
         System.loadLibrary("LanSongdisplay");
         System.loadLibrary("LanSongplayer");
 
-        Log.d("LanSongSDK", "loaded libraries....is QiLinSoc."+VideoEditor.isQiLinSoc());
         isLoaded = true;
     }
 
