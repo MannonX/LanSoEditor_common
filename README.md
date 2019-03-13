@@ -46,7 +46,16 @@
                	; 如果返回true,得到视频宽度,高度,码率,帧率,时长,编码器,总帧数,是否有B帧,旋转角度, 音频采样率,音频通道数, 音频码率,是否有音频,视频,视频是否旋转 等参数;
              }
 	     也可以先用MediaInfo判断当前视频的各种信息;
-    3, 文件创建,删除类 LanSongFileUtil.java 方便你在编辑时的各种文件创建,删除, 判断等操作.	     
+    3, 文件创建,删除类 LanSongFileUtil.java 方便你在编辑时的各种文件创建,删除, 判断等操作.
+    4, 请不要混淆我们的SDK， 具体如下：
+		-keep public class com.lansosdk.videoeditor.** {
+			<fields>;
+			<methods>;
+		}。
+		-keep public class com.lansosdk.videoplayer.** {
+			<fields>;
+			<methods>;
+		}。
 ``` 
 ### 常见问题解决：
 ```
@@ -71,7 +80,7 @@
 - 提供为期一年的 技术支持和功能定制(一年内可定制基于此版本的其它功能.) 
 - 定制的功能永久使用,我们负责维护, 速度优化. 
 - 规划需求时的视频技术咨询,可以在规划需求的时候,就向我们咨询,或许您感觉很复杂的效果,在我们看来,只需几行代码就可以实现,可以让您少走很多弯路;
--  费用16000元(SDK永久使用.).
+-  费用13000元(SDK永久使用.).
 
 # 专业版架构介绍
 ![架构示意图](https://github.com/LanSoSdk/LanSoEditor_advance/blob/master/SDK%E6%9E%B6%E6%9E%84%E5%9B%BE%E7%89%87.png)
